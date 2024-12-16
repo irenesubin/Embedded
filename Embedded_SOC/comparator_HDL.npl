@@ -1,0 +1,28 @@
+JDF G
+// Created by Project Navigator ver 1.0
+PROJECT comparator_HDL
+DESIGN comparator_hdl
+DEVFAM qrvirtex
+DEVFAMTIME 0
+DEVICE xqvr300
+DEVICETIME 0
+DEVPKG cb228
+DEVPKGTIME 0
+DEVSPEED -4
+DEVSPEEDTIME 0
+DEVTOPLEVELMODULETYPE HDL
+TOPLEVELMODULETYPETIME 0
+DEVSYNTHESISTOOL XST (VHDL/Verilog)
+SYNTHESISTOOLTIME 0
+DEVSIMULATOR Modelsim
+SIMULATORTIME 0
+DEVGENERATEDSIMULATIONMODEL Verilog
+GENERATEDSIMULATIONMODELTIME 0
+SOURCE mux_processor.v
+SOURCE mux_processor_tb.v
+SOURCE ..\typically_verilog-HDL\bit4_processor_tb.v
+SOURCE ..\typically_verilog-HDL\bit4_processor.v
+SOURCE ..\typically_verilog-HDL\bit3_processor_tb.v
+SOURCE ..\typically_verilog-HDL\bit3_processor.v
+[STRATEGY-LIST]
+Normal=True

@@ -1,0 +1,151 @@
+module bit6_counter_n(CLK, reset, OUT);
+
+input CLK, reset;
+output [5:0]OUT;
+reg [5:0]OUT;
+
+always@(posedge CLK or posedge reset)
+	begin
+		if(reset == 1'b1)
+			OUT = 6'd0;
+		else
+			OUT = OUT+1;
+ end
+
+endmodule
+
+module bit6_counter_p(CLK, reset, OUT);
+
+input CLK, reset;
+output [5:0]OUT;
+reg [5:0]OUT;
+
+always@(posedge CLK or posedge reset)
+	begin
+		if(reset == 1'b1)
+			OUT = 6'd0;
+		else
+			OUT = OUT+1;
+ end
+
+endmodule
+
+module mem_64x8_A(ADDR, DIN, WEN, DOUT);
+
+parameter data_bit = 8;
+parameter addr_bit = 6;
+parameter num_of_data = 64;
+
+input [addr_bit -1:0]ADDR;
+input [data_bit -1:0]DIN;
+input WEN;
+output [data_bit -1:0]DOUT;
+
+reg [data_bit -1:0]DOUT;
+
+//16x4 2D array 선언
+reg [data_bit -1:0] test_memory[0:num_of_data-1];
+
+//메모리 초기화
+initial begin
+	$readmemh("mem_64x8_r_1.txt", test_memory);
+	end
+//메모리 쓰기 및 출력
+always @(ADDR)
+	begin
+		if(WEN)
+			begin
+				test_memory[ADDR] = DIN;
+				DOUT = test_memory[ADDR];
+		end
+		else
+			DOUT = test_memory[ADDR];
+		end
+//메모리 
+
+endmodule
+module mem_64x8_B(ADDR, DIN, WEN, DOUT);
+
+parameter data_bit = 4;
+parameter addr_bit = 4;
+parameter num_of_data = 16;
+
+input [addr_bit -1:0]ADDR;
+input [data_bit -1:0]DIN;
+input WEN;
+output [data_bit -1:0]DOUT;
+
+reg [data_bit -1:0]DOUT;
+
+//16x4 2D array 선언
+reg [data_bit -1:0] test_memory[0:num_of_data-1];
+
+//메모리 초기화
+initial begin
+	$readmemh("mem_64x8_r_1.txt", test_memory);
+	end
+
+integer fp, i;
+initial begin
+	fp = $fopen("mem_64x8_w_1.txt");
+	for (i = 0; i < num_of_data; i = i +1)
+		$fdisplay(fp, "%h", test_memory[i]);
+		$fclose(fp);
+end
+endmodule
+
+module ADD_A(CLK, reset, DOUT, WEN, DIN);
+
+input CLK, reset, WEN;
+input [3:0]DIN;
+output [3:0]DOUT;
+
+wire [3:0]OUT
+
+bit6_counter_p bit6_counter_p(.CLK(CLK), .rest(reset), .OUT(OUT));
+mem_64x8_A mem_64x8_A(.ADDR(OUT), .DIN(DIN), .WEN(WEN), .DOUT(DOUT));
+
+endmodule
+
+module ADD_B(CLK, reset, DOUT, WEN, DIN );
+
+input CLK, reset, WEN;
+input [3:0]DIN;
+output [3:0]DOUT;
+
+wire [3:0]OUT
+
+bit6_counter_n bit6_counter_n(.CLK(CLK), .reset(reset), .OUT(OUT));
+mem_64x8_B mem_64x8_B(.ADDR(OUT), .DIN(DIN), .WEN(WEN), .DOUT(DOUT));
+
+endmodule
+
+module binary_processor(CLK, reset, DIN, WEN, memory64x8_B_DIN);
+
+input CLK, reset, WEN;
+input [7:0] DIN;
+output [7:0] memory64x8_B_DIN;
+
+reg [7:0]memory64x8_B_DIN;
+reg [7:0]DOUT;
+
+add_A add_A (.CLK(CLK), .reset(reset), .DIN(DIN), .WEN(1'b0), .DOUT(DOUT));
+
+  // add_B 모듈
+add_B add_B (.CLK(CLK), .reset(reset),.DIN(memory64x8_B_DIN),.WEN(1'b1), .DOUT(DOUT));
+
+always @(DOUT)
+begin
+    if (DOUT >= 8'd128)
+        memory64x8_B_DIN = 8'd255;
+    else
+        memory64x8_B_DIN = 8'd0;
+end
+
+endmodule
+
+
+
+add_B add_B (.CLK(CLK), .reset(reset),.DIN(memory64x8_B_DIN),.WEN(WEN), .DOUT(DOUT))
+
+add_A add_A (.CLK(CLK), .reset(reset), .DIN(DIN), .WEN(WEN), .DOUT(binary64x8_in));

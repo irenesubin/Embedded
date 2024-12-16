@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn __projnav/bit4_processor.xst -ofn bit4_processor.syr
